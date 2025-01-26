@@ -1,8 +1,10 @@
 # 使用官方 Node.js 镜像作为基础
 FROM node:22-slim
+
 # 安装 Puppeteer 的系统依赖
 RUN apt-get update && \
     apt-get install -y \
+    gnupg2  # 添加 gnupg2
     ca-certificates \
     fonts-liberation \
     libasound2 \
@@ -59,7 +61,7 @@ RUN npm install puppeteer
 # 创建缓存目录
 RUN mkdir -p /app/.cache/puppeteer && chmod -R 777 /app/.cache/puppeteer
 
-# 设置 Puppeteer 缓存路径
+# 设置环境变量
 ENV PUPPETEER_CACHE_DIR=/app/.cache/puppeteer
 
 # 复制源码
