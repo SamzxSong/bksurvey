@@ -174,7 +174,7 @@ const clickSingleOption = async (page, option = "") => {
 const generate = async () => {
   try {
     const browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
       executablePath: "/usr/bin/google-chrome-stable",
     });
