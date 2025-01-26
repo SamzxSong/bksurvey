@@ -1,6 +1,5 @@
 # 使用官方 Node.js 镜像作为基础
 FROM node:22-slim
-
 # 安装 Puppeteer 的系统依赖
 RUN apt-get update && \
     apt-get install -y \
@@ -41,23 +40,33 @@ RUN apt-get update && \
     wget \
     xdg-utils
 
+# 安装 Chrome
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+    echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list && \
+    apt-get update && \
+    apt-get install -y google-chrome-stable
+
 # 设置工作目录
 WORKDIR /app
 
 # 复制项目文件并安装依赖
 COPY package*.json ./
-RUN npm install --production
+RUN npm install
 
-# 复制源码
-COPY . .
+# 自动安装 Chrome
+RUN npm install puppeteer
+
+# 创建缓存目录
+RUN mkdir -p /app/.cache/puppeteer && chmod -R 777 /app/.cache/puppeteer
 
 # 设置 Puppeteer 缓存路径
 ENV PUPPETEER_CACHE_DIR=/app/.cache/puppeteer
 
+# 复制源码
+COPY . .
+
 # 暴露端口（与 Render 环境变量一致）
 EXPOSE 10000
-
-RUN ls -l /app
 
 # 启动命令
 CMD ["node", "form_handler.js"]
