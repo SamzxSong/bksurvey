@@ -57,5 +57,7 @@ ENV PUPPETEER_CACHE_DIR=/app/.cache/puppeteer
 # 暴露端口（与 Render 环境变量一致）
 EXPOSE 10000
 
+RUN ls -l /app
+
 # 启动命令
-CMD ["node", "form_handler.js "]
+CMD ["node", "form_handler.js"]
