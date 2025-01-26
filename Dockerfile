@@ -1,5 +1,5 @@
 # 使用官方 Node.js 镜像作为基础
-FROM node:18-slim
+FROM node:22-slim
 
 # 安装 Puppeteer 的系统依赖
 RUN apt-get update && \
