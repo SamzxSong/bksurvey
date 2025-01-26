@@ -175,12 +175,7 @@ const generate = async () => {
   try {
     const browser = await puppeteer.launch({
       headless: false,
-      //   args: [
-      //     "--disable-setuid-sandbox",
-      //     "--no-sandbox",
-      //     "--single-process",
-      //     "--no-zygote",
-      //   ],
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
       executablePath: "/usr/bin/google-chrome-stable",
     });
     const page = await browser.newPage();
