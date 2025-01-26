@@ -1,0 +1,23 @@
+{
+  "name": "bksurvey",
+  "version": "1.0.0",
+  "main": "form_handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SamzxSong/bksurvey.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SamzxSong/bksurvey/issues"
+  },
+  "homepage": "https://github.com/SamzxSong/bksurvey#readme",
+  "description": "",
+  "dependencies": {
+    "puppeteer": "^24.1.0"
+  }
+}
