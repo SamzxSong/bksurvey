@@ -1,45 +1,61 @@
-FROM ghcr.io/puppeteer/puppeteer:24.1.0
+# 使用官方 Node.js 镜像作为基础
+FROM node:18-slim
 
-ENV \
-    # Configure default locale (important for chrome-headless-shell).
-    LANG=en_US.UTF-8 \
-    # UID of the non-root user 'pptruser'
-    PPTRUSER_UID=10042
+# 安装 Puppeteer 的系统依赖
+RUN apt-get update && \
+    apt-get install -y \
+    ca-certificates \
+    fonts-liberation \
+    libasound2 \
+    libatk-bridge2.0-0 \
+    libatk1.0-0 \
+    libc6 \
+    libcairo2 \
+    libcups2 \
+    libdbus-1-3 \
+    libexpat1 \
+    libfontconfig1 \
+    libgbm1 \
+    libgcc1 \
+    libglib2.0-0 \
+    libgtk-3-0 \
+    libnspr4 \
+    libnss3 \
+    libpango-1.0-0 \
+    libpangocairo-1.0-0 \
+    libstdc++6 \
+    libx11-6 \
+    libx11-xcb1 \
+    libxcb1 \
+    libxcomposite1 \
+    libxcursor1 \
+    libxdamage1 \
+    libxext6 \
+    libxfixes3 \
+    libxi6 \
+    libxrandr2 \
+    libxrender1 \
+    libxss1 \
+    libxtst6 \
+    lsb-release \
+    wget \
+    xdg-utils
 
-# Install latest chrome dev package and fonts to support major charsets (Chinese, Japanese, Arabic, Hebrew, Thai and a few others)
-# Note: this installs the necessary libs to make the bundled version of Chrome that Puppeteer
-# installs, work.
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-khmeros \
-    fonts-kacst fonts-freefont-ttf dbus dbus-x11
+# 设置工作目录
+WORKDIR /app
 
-# Add pptruser.
-RUN groupadd -r pptruser && useradd -u $PPTRUSER_UID -rm -g pptruser -G audio,video pptruser
-
-USER $PPTRUSER_UID
-
-WORKDIR /home/pptruser
-
-COPY puppeteer-browsers-latest.tgz puppeteer-latest.tgz puppeteer-core-latest.tgz ./
-
-ENV DBUS_SESSION_BUS_ADDRESS autolaunch:
-
-# Install @puppeteer/browsers, puppeteer and puppeteer-core into /home/pptruser/node_modules.
-RUN npm i ./puppeteer-browsers-latest.tgz ./puppeteer-core-latest.tgz ./puppeteer-latest.tgz \
-    && rm ./puppeteer-browsers-latest.tgz ./puppeteer-core-latest.tgz ./puppeteer-latest.tgz
-
-# Install system dependencies as root.
-USER root
-# Overriding the cache directory to install the deps for the Chrome
-# version installed for pptruser. 
-RUN PUPPETEER_CACHE_DIR=/home/pptruser/.cache/puppeteer \
-  npx puppeteer browsers install chrome --install-deps
-# ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=false \
-#     PUPPETEER_DOWNLOAD_BASE_URL=https://storage.googleapis.com/chrome-for-testing-public
-
-# WORKDIR /usr/src/app
-
+# 复制项目文件并安装依赖
 COPY package*.json ./
-RUN npm ci
+RUN npm install --production
+
+# 复制源码
 COPY . .
-CMD [ "node", "form_handler.js"]
+
+# 设置 Puppeteer 缓存路径
+ENV PUPPETEER_CACHE_DIR=/app/.cache/puppeteer
+
+# 暴露端口（与 Render 环境变量一致）
+EXPOSE 10000
+
+# 启动命令
+CMD ["node", "form_handler.js "]

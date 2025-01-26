@@ -1,0 +1,11 @@
+services:
+  - type: web
+    runtime: node
+    name: puppeteer-service
+    dockerfilePath: Dockerfile
+    plan: free
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: PUPPETEER_EXECUTABLE_PATH
+        value: /usr/bin/chromium
