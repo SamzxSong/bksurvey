@@ -4,7 +4,7 @@ FROM node:22-slim
 # 安装 Puppeteer 的系统依赖
 RUN apt-get update && \
     apt-get install -y \
-    gnupg2  # 添加 gnupg2
+    gnupg2 \
     ca-certificates \
     fonts-liberation \
     libasound2 \
