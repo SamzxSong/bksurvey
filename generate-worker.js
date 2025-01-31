@@ -174,10 +174,10 @@ const clickSingleOption = async (page, option = "") => {
 const generate = async () => {
   try {
     const browser = await puppeteer.launch({
-      headless: true,
-      protocolTimeout: 1200000,
-      args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu"],
-      executablePath: "/usr/bin/google-chrome-stable",
+      headless: false,
+      // protocolTimeout: 1200000,
+      // args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu"],
+      // executablePath: "/usr/bin/google-chrome-stable",
     });
     const page = await browser.newPage();
 
@@ -292,7 +292,7 @@ const generate = async () => {
     // Thrid page
     let i = 0;
     while (i < 21) {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2500));
       if (i >= 6 && i <= 7) {
         await clickRadioOption(page);
       } else if (i === 8) {
